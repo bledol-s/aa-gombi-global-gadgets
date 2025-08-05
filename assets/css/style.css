@@ -110,11 +110,13 @@ nav a:hover {
 
 .product-card img {
   width: 100%;
-  max-height: 200px;
-  object-fit: cover;
-  margin-bottom: 15px;
-  border-radius: 5px;
+  height: 200px; /* Adjust height as you prefer */
+  object-fit: contain; /* Prevents cropping */
+  background-color: #fff; /* Optional: gives a clean background if aspect ratio doesn't match */
+  padding: 10px; /* Adds space around image */
+  border-radius: 8px;
 }
+
 
 .product-card h3 {
   font-size: 20px;
@@ -251,6 +253,18 @@ nav a:hover {
   font-size: 18px;
   font-weight: bold;
   margin-top: 20px;
+}
+
+.selected-item {
+  padding: 20px 0;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.selected-item .product-card {
+  background: #fff9f0; /* subtle warm background so it stands out */
+  padding: 12px;
+  border-radius: 8px;
 }
 
 

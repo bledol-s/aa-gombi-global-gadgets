@@ -1,64 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>AA GOMBI GLOBAL GADGETS</title>
-  <link rel="stylesheet" href="assets/css/style.css"/>
+  <link rel="stylesheet" href="assets/css/style.css" />
 </head>
 <body>
-
   <!-- Header Section -->
   <header class="header">
-    <div class="container">
-      <img src="assets/images/logo.png" alt="logo"/>
-      <h1 class="logo">AA GOMBI GLOBAL GADGETS</h1>
-      <nav class="navbar">
-        <a href="index.html">Home</a>
-        <a href="product.html">Products</a>
-        <a href="cart.html">Cart</a>
-      </nav>
+    <div class="container" style="display:flex;align-items:center;gap:12px;">
+      <img src="assets/images/logo.png" alt="AA Gombi logo" style="height:60px; width:auto; object-fit:contain;" />
+      <div style="flex:1;">
+        <h1 class="logo" style="margin:0; font-size:20px;">AA GOMBI GLOBAL GADGETS</h1>
+        <nav class="navbar" style="margin-top:6px;">
+          <a href="index.html">Home</a>
+          <a href="product.html">Products</a>
+          <a href="cart.html">Cart</a>
+        </nav>
+      </div>
     </div>
   </header>
 
-  <!-- Hero Section -->
+  <!-- Hero -->
   <section class="hero">
     <div class="container">
       <h2>Your One-Stop Shop for Gadgets & Accessories</h2>
-      <p>Explore premium gadgets at unbeatable prices.</p>
-      <a href="product.html" class="btn">Shop Now</a>
+      <p>Top-quality electronics, fair prices, fast delivery across Nigeria.</p>
+      <a href="product.html" class="btn">Browse All Products</a>
     </div>
   </section>
 
   <!-- Featured Products -->
   <section class="products">
     <div class="container">
-      <h3>Featured Products</h3>
+      <h2>Featured Products</h2>
+
       <div class="product-grid">
+        <!-- Card: iPhone 15 -->
         <div class="product-card">
-          <img src="assets/images/phone.jpg" alt="Smartphone"/>
-          <h4>Smartphone X200</h4>
-          <p>₦120,000</p>
-          <button>Add to Cart</button>
+          <img src="assets/images/iphone15.jpg" alt="iPhone 15" />
+          <h3>iPhone 15</h3>
+          <p class="desc">iPhone 15 — A16 chip, 128GB storage, 6.1" Super Retina XDR, 48MP camera.</p>
+          <p class="price">₦120,000</p>
+          <button onclick="goToProductPage('iPhone 15', 120000, 'assets/images/iphone15.jpg')" class="add-btn">Add to Cart</button>
         </div>
+
+        <!-- Card: Wireless Earbuds -->
         <div class="product-card">
-          <img src="assets/images/earbuds.jpg" alt="Wireless Earbuds"/>
-          <h4>Wireless Earbuds</h4>
-          <p>₦15,000</p>
-          <button>Add to Cart</button>
+          <img src="assets/images/earbuds.jpg" alt="Wireless Earbuds" />
+          <h3>Wireless Earbuds</h3>
+          <p class="desc">True wireless earbuds — Bluetooth 5.3, ANC, up to 30 hours with case, touch controls.</p>
+          <p class="price">₦25,000</p>
+          <button onclick="goToProductPage('Wireless Earbuds', 25000, 'assets/images/earbuds.jpg')" class="add-btn">Add to Cart</button>
         </div>
+
+        <!-- Card: Powerbank 50000mAh -->
         <div class="product-card">
-          <img src="assets/images/powerbank.jpg" alt="Power Bank"/>
-          <h4>Power Bank 20000mAh</h4>
-          <p>₦8,500</p>
-          <button>Add to Cart</button>
+          <img src="assets/images/powerbank50000.jpg" alt="Powerbank 50000mAh" />
+          <h3>Powerbank 50000mAh</h3>
+          <p class="desc">50000mAh Powerbank — Multi-output (USB-A, USB-C), fast charge, intelligent protection.</p>
+          <p class="price">₦45,000</p>
+          <button onclick="goToProductPage('Powerbank 50000mAh', 45000, 'assets/images/powerbank50000.jpg')" class="add-btn">Add to Cart</button>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Footer -->
-  <footer class="footer">
+  <footer>
     <div class="container">
       <p>&copy; 2025 AA GOMBI GLOBAL GADGETS. All rights reserved.</p>
     </div>

@@ -1,44 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Product Details - AA GOMBI GLOBAL GADGETS</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Products - AA GOMBI GLOBAL GADGETS</title>
   <link rel="stylesheet" href="assets/css/style.css" />
+  <style>
+    /* Ensure product page images also use contain to avoid cropping */
+    .product-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: contain;
+      background-color: #fff;
+      padding: 10px;
+      border-radius: 8px;
+    }
+
+    .selected-item {
+      padding: 18px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      background: #fff9f0; /* subtle highlight */
+      border: 1px solid #f1e7d6;
+    }
+
+    .product-wrapper {
+      display:flex;
+      gap:20px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+  </style>
 </head>
 <body>
   <!-- Header -->
-  <header>
-    <div class="container">
-      <h1 class="logo">AA GOMBI GLOBAL GADGETS</h1>
-      <nav>
-        <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="product.html">Products</a></li>
-          <li><a href="cart.html">Cart</a></li>
-          <li><a href="#">Contact</a></li>
-        </ul>
-      </nav>
+  <header class="header">
+    <div class="container" style="display:flex;align-items:center;gap:12px;">
+      <img src="assets/images/logo.png" alt="AA Gombi logo" style="height:60px; width:auto; object-fit:contain;" />
+      <div style="flex:1;">
+        <h1 class="logo" style="margin:0; font-size:20px;">AA GOMBI GLOBAL GADGETS</h1>
+        <nav class="navbar" style="margin-top:6px;">
+          <a href="index.html">Home</a>
+          <a href="product.html">Products</a>
+          <a href="cart.html">Cart</a>
+        </nav>
+      </div>
     </div>
   </header>
 
-  <!-- Product Detail Section -->
-  <section class="product-detail">
+  <!-- Selected Item Confirmation -->
+  <section class="container" id="selected-item-section" style="display:none;">
+    <div class="selected-item" id="selected-item"></div>
+  </section>
+
+  <!-- Products List -->
+  <section class="products">
     <div class="container">
-      <div class="product-wrapper">
-        <div class="product-image">
-          <img src="assets/images/phone.jpg" alt="Smartphone" />
-        </div>
-        <div class="product-info">
-          <h2>Smartphone</h2>
-          <p class="price">₦120,000</p>
-          <p class="description">
-            This high-performance smartphone comes with 128GB storage, 6GB RAM, and a powerful battery for all-day use.
-          </p>
-          <button class="add-to-cart">Add to Cart</button>
-          <br /><br />
-          <a href="index.html" class="btn">← Back to Home</a>
-        </div>
+      <h2>All Products</h2>
+      <div class="product-grid" id="products-grid">
+        <!-- JS will render product cards here -->
       </div>
     </div>
   </section>
@@ -50,6 +70,22 @@
     </div>
   </footer>
 
+  <!-- Shared script (must include all helper functions: addToCart, goToProductPage, renderProductsGrid, handleUrlProduct) -->
   <script src="assets/js/script.js"></script>
+
+  <script>
+    // Extra safety: if the product grid failed to render from the main script, call renderProductsGrid here
+    document.addEventListener('DOMContentLoaded', () => {
+      // If renderProductsGrid is available, call it (it should be from script.js)
+      if (typeof renderProductsGrid === 'function') {
+        renderProductsGrid();
+      }
+
+      // Call URL handler if available (adds product from query string once)
+      if (typeof handleUrlProduct === 'function') {
+        handleUrlProduct();
+      }
+    });
+  </script>
 </body>
 </html>

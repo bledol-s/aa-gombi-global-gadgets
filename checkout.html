@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Checkout</title>
+<link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <div class="container" style="padding:30px;">
+    <h2>Checkout (Demo)</h2>
+    <div id="checkout-info"></div>
+    <p>This is a demo checkout page. Payment gateway will be integrated later.</p>
+    <button id="confirm-order" class="btn">Confirm Order (Demo)</button>
+  </div>
+<script>
+  const payload = JSON.parse(localStorage.getItem('checkout_payload') || 'null');
+  const el = document.getElementById('checkout-info');
+  if (!payload) {
+    el.innerHTML = '<p>No checkout data found.</p>';
+  } else {
+    el.innerHTML = `<p>Items: ${payload.items.length}</p><p>Total: ₦${payload.total.toLocaleString()}</p>`;
+  }
+  document.getElementById('confirm-order').addEventListener('click', () => {
+    alert('Order confirmed (demo). Clear cart now.');
+    localStorage.removeItem('cart');
+    localStorage.removeItem('checkout_payload');
+    window.location.href = 'index.html';
+  });
+</script>
+</body>
+</html>
