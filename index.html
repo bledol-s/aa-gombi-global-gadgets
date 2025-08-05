@@ -4,52 +4,42 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>AA GOMBI GLOBAL GADGETS</title>
+
+  <!-- main stylesheet -->
   <link rel="stylesheet" href="assets/css/style.css" />
-  <style>
-    /* Small local styles for search & product grid spacing */
-    .header { padding: 18px 0; }
-    .header .top-row { display:flex; align-items:center; gap:12px; }
-    .search-bar { margin: 18px 0; display:flex; gap:8px; align-items:center; }
-    .search-bar input[type="search"] {
-      flex:1; padding:10px 12px; border-radius:8px; border:1px solid #ddd;
-    }
-    .search-bar button { padding:10px 14px; border-radius:8px; border:none; font-weight:700; cursor:pointer; background:#6A0DAD; color:#FFD700; }
-    .cart-count { background:#FFD700; color:#6A0DAD; padding:4px 8px; border-radius:20px; font-weight:700; margin-left:8px; }
-    .product-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:22px; margin-top:18px; }
-    .product-card img { width:100%; height:200px; object-fit:contain; background:#fff; padding:10px; border-radius:8px; }
-    .product-card .meta { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:8px; }
-    .selected-item { margin-top:20px; padding:12px; border-radius:8px; background:#fff9f0; border:1px solid #f1e7d6; display:none; }
-    .selected-item img { width:90px; height:90px; object-fit:contain; border-radius:6px; margin-right:12px; }
-  </style>
 </head>
 <body>
   <!-- Header -->
-  <header class="header">
-    <div class="container top-row">
-      <img src="assets/images/logo.png" alt="AA Gombi logo" style="height:60px; width:auto; object-fit:contain;" />
-      <div style="flex:1;">
-        <h1 class="logo" style="margin:0; font-size:20px;">AA GOMBI GLOBAL GADGETS</h1>
-        <nav class="navbar" style="margin-top:6px;">
-          <a href="index.html">Home</a>
-          <a href="cart.html">Cart <span id="cart-count" class="cart-count">0</span></a>
-          <a href="admin.html">Admin</a>
-        </nav>
+  <header class="site-header">
+    <div class="container header-row">
+      <div class="brand">
+        <img src="assets/images/logo.png" alt="AA Gombi logo" class="brand-logo" />
+        <div>
+          <h1 class="brand-title">AA GOMBI GLOBAL GADGETS</h1>
+          <p class="brand-sub">Gadgets & Accessories — quality you can trust</p>
+        </div>
       </div>
+
+      <nav class="site-nav">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="cart.html" class="nav-link">Cart <span id="cart-count" class="cart-count">0</span></a>
+        <!-- admin moved to footer as requested -->
+      </nav>
     </div>
   </header>
 
   <!-- Hero + Search -->
   <section class="hero">
     <div class="container">
-      <h2>Your One-Stop Shop for Gadgets & Accessories</h2>
-      <p>Top-quality electronics, fair prices, fast delivery across Nigeria.</p>
+      <h2 class="hero-title">Your One-Stop Shop for Gadgets & Accessories</h2>
+      <p class="hero-desc">Top-quality electronics, fair prices, fast delivery across Nigeria.</p>
 
-      <div class="search-bar" role="search">
-        <input id="search-input" type="search" placeholder="Search products by name or description..." />
-        <button id="search-clear" title="Clear search">Clear</button>
+      <div class="search-wrap" role="search">
+        <input id="search-input" class="search-input" type="search" placeholder="Search products by name or description..." />
+        <button id="search-clear" class="search-clear">Clear</button>
       </div>
 
-      <a href="cart.html" class="btn">Proceed to Cart</a>
+      <a href="cart.html" class="btn btn-primary">Proceed to Cart</a>
     </div>
   </section>
 
@@ -59,23 +49,64 @@
   </section>
 
   <!-- Products -->
-  <section class="products">
-    <div class="container">
-      <h2>Products</h2>
+  <main class="container">
+    <h2 class="section-title">Products</h2>
+    <div id="products-grid" class="product-grid" aria-live="polite"></div>
+  </main>
 
-      <div id="products-grid" class="product-grid">
-        <!-- JS will render product cards here -->
+  <!-- Footer (Admin, Weekend Deals, Socials) -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-block">
+        <h4>About AA Gombi</h4>
+        <p class="muted">We sell gadgets and accessories across Nigeria — quality items, fair prices, and prompt delivery.</p>
+      </div>
+
+      <div class="footer-block">
+        <h4>Admin</h4>
+        <p><a class="footer-link" href="admin.html">Product Management (Admin)</a></p>
+        <p class="muted">Admin area is client-side for now (localStorage). We can migrate to Firebase later.</p>
+      </div>
+
+      <div class="footer-block">
+        <h4>Weekend Deals</h4>
+        <p><a class="footer-link" href="https://whatapp.com/channel/0029VbAlwXxLY6d8DGv81H3R" target="_blank" rel="noopener">Join our WhatsApp channel for weekend deals</a></p>
+        <p class="muted">Exclusive deals every weekend — join the channel.</p>
+      </div>
+
+      <div class="footer-block">
+        <h4>Follow Us</h4>
+        <div class="social-row">
+          <a class="social-link" href="#" target="_blank" rel="noopener">
+            <img src="assets/images/instagram.png" alt="Instagram" class="social-icon" />
+            Instagram
+          </a>
+          <a class="social-link" href="#" target="_blank" rel="noopener">
+            <img src="assets/images/facebook.png" alt="Facebook" class="social-icon" />
+            Facebook
+          </a>
+          <a class="social-link" href="#" target="_blank" rel="noopener">
+            <img src="assets/images/tiktok.png" alt="TikTok" class="social-icon" />
+            TikTok
+          </a>
+        </div>
       </div>
     </div>
-  </section>
 
-  <!-- Footer -->
-  <footer>
-    <div class="container">
-      <p>&copy; 2025 AA GOMBI GLOBAL GADGETS. All rights reserved.</p>
+    <div class="container footer-bottom">
+      <p class="muted">&copy; 2025 AA GOMBI GLOBAL GADGETS</p>
     </div>
   </footer>
 
+  <!-- WhatsApp floating chat button -->
+  <a href="https://wa.me/2348137342695" target="_blank" rel="noopener" class="whatsapp-float" aria-label="Chat on WhatsApp">
+    <img src="assets/images/whatsapp-icon.png" alt="WhatsApp" />
+  </a>
+
+  <!-- Toast container (for non-blocking confirmations) -->
+  <div id="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Scripts -->
   <script src="assets/js/script.js"></script>
   <script>
     // wire search input to script functions
@@ -84,21 +115,15 @@
       const clearBtn = document.getElementById('search-clear');
 
       function doSearch() {
-        if (typeof filterProducts === 'function') {
-          filterProducts(input.value || '');
-        } else {
-          console.warn('filterProducts not found');
-        }
+        if (typeof filterProducts === 'function') filterProducts(input.value || '');
+        else if (typeof window.filterProducts === 'function') window.filterProducts(input.value || '');
       }
 
       input.addEventListener('input', doSearch);
-      clearBtn.addEventListener('click', () => {
-        input.value = '';
-        doSearch();
-      });
+      clearBtn.addEventListener('click', () => { input.value = ''; doSearch(); });
 
-      // update cart-count UI (in case script already has value)
       if (typeof updateCartCount === 'function') updateCartCount();
+      if (typeof window.updateCartCount === 'function') window.updateCartCount();
     });
   </script>
 </body>
