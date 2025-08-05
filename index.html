@@ -5,64 +5,66 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>AA GOMBI GLOBAL GADGETS</title>
   <link rel="stylesheet" href="assets/css/style.css" />
+  <style>
+    /* Small local styles for search & product grid spacing */
+    .header { padding: 18px 0; }
+    .header .top-row { display:flex; align-items:center; gap:12px; }
+    .search-bar { margin: 18px 0; display:flex; gap:8px; align-items:center; }
+    .search-bar input[type="search"] {
+      flex:1; padding:10px 12px; border-radius:8px; border:1px solid #ddd;
+    }
+    .search-bar button { padding:10px 14px; border-radius:8px; border:none; font-weight:700; cursor:pointer; background:#6A0DAD; color:#FFD700; }
+    .cart-count { background:#FFD700; color:#6A0DAD; padding:4px 8px; border-radius:20px; font-weight:700; margin-left:8px; }
+    .product-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:22px; margin-top:18px; }
+    .product-card img { width:100%; height:200px; object-fit:contain; background:#fff; padding:10px; border-radius:8px; }
+    .product-card .meta { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:8px; }
+    .selected-item { margin-top:20px; padding:12px; border-radius:8px; background:#fff9f0; border:1px solid #f1e7d6; display:none; }
+    .selected-item img { width:90px; height:90px; object-fit:contain; border-radius:6px; margin-right:12px; }
+  </style>
 </head>
 <body>
-  <!-- Header Section -->
+  <!-- Header -->
   <header class="header">
-    <div class="container" style="display:flex;align-items:center;gap:12px;">
+    <div class="container top-row">
       <img src="assets/images/logo.png" alt="AA Gombi logo" style="height:60px; width:auto; object-fit:contain;" />
       <div style="flex:1;">
         <h1 class="logo" style="margin:0; font-size:20px;">AA GOMBI GLOBAL GADGETS</h1>
         <nav class="navbar" style="margin-top:6px;">
           <a href="index.html">Home</a>
-          <a href="product.html">Products</a>
-          <a href="cart.html">Cart</a>
+          <a href="cart.html">Cart <span id="cart-count" class="cart-count">0</span></a>
+          <a href="admin.html">Admin</a>
         </nav>
       </div>
     </div>
   </header>
 
-  <!-- Hero -->
+  <!-- Hero + Search -->
   <section class="hero">
     <div class="container">
       <h2>Your One-Stop Shop for Gadgets & Accessories</h2>
       <p>Top-quality electronics, fair prices, fast delivery across Nigeria.</p>
-      <a href="product.html" class="btn">Browse All Products</a>
+
+      <div class="search-bar" role="search">
+        <input id="search-input" type="search" placeholder="Search products by name or description..." />
+        <button id="search-clear" title="Clear search">Clear</button>
+      </div>
+
+      <a href="cart.html" class="btn">Proceed to Cart</a>
     </div>
   </section>
 
-  <!-- Featured Products -->
+  <!-- Selected Item / Quick preview -->
+  <section class="container">
+    <div id="selected-item" class="selected-item"></div>
+  </section>
+
+  <!-- Products -->
   <section class="products">
     <div class="container">
-      <h2>Featured Products</h2>
+      <h2>Products</h2>
 
-      <div class="product-grid">
-        <!-- Card: iPhone 15 -->
-        <div class="product-card">
-          <img src="assets/images/iphone15.jpg" alt="iPhone 15" />
-          <h3>iPhone 15</h3>
-          <p class="desc">iPhone 15 — A16 chip, 128GB storage, 6.1" Super Retina XDR, 48MP camera.</p>
-          <p class="price">₦120,000</p>
-          <button onclick="goToProductPage('iPhone 15', 120000, 'assets/images/iphone15.jpg')" class="add-btn">Add to Cart</button>
-        </div>
-
-        <!-- Card: Wireless Earbuds -->
-        <div class="product-card">
-          <img src="assets/images/earbuds.jpg" alt="Wireless Earbuds" />
-          <h3>Wireless Earbuds</h3>
-          <p class="desc">True wireless earbuds — Bluetooth 5.3, ANC, up to 30 hours with case, touch controls.</p>
-          <p class="price">₦25,000</p>
-          <button onclick="goToProductPage('Wireless Earbuds', 25000, 'assets/images/earbuds.jpg')" class="add-btn">Add to Cart</button>
-        </div>
-
-        <!-- Card: Powerbank 50000mAh -->
-        <div class="product-card">
-          <img src="assets/images/powerbank50000.jpg" alt="Powerbank 50000mAh" />
-          <h3>Powerbank 50000mAh</h3>
-          <p class="desc">50000mAh Powerbank — Multi-output (USB-A, USB-C), fast charge, intelligent protection.</p>
-          <p class="price">₦45,000</p>
-          <button onclick="goToProductPage('Powerbank 50000mAh', 45000, 'assets/images/powerbank50000.jpg')" class="add-btn">Add to Cart</button>
-        </div>
+      <div id="products-grid" class="product-grid">
+        <!-- JS will render product cards here -->
       </div>
     </div>
   </section>
@@ -75,5 +77,29 @@
   </footer>
 
   <script src="assets/js/script.js"></script>
+  <script>
+    // wire search input to script functions
+    document.addEventListener('DOMContentLoaded', () => {
+      const input = document.getElementById('search-input');
+      const clearBtn = document.getElementById('search-clear');
+
+      function doSearch() {
+        if (typeof filterProducts === 'function') {
+          filterProducts(input.value || '');
+        } else {
+          console.warn('filterProducts not found');
+        }
+      }
+
+      input.addEventListener('input', doSearch);
+      clearBtn.addEventListener('click', () => {
+        input.value = '';
+        doSearch();
+      });
+
+      // update cart-count UI (in case script already has value)
+      if (typeof updateCartCount === 'function') updateCartCount();
+    });
+  </script>
 </body>
 </html>

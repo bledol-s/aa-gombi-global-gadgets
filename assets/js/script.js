@@ -1,23 +1,11 @@
 /* assets/js/script.js
-   Consolidated script — safe ordering, defensive checks
+   Homepage-centered product listing with search & cart (localStorage)
 */
 
-// ---------------------- Utility & Storage ----------------------
+// ---- Storage keys ----
 const STORAGE_KEYS = { CART: 'cart', PRODUCTS: 'products', CHECKOUT: 'checkout_payload' };
 
-function readJSON(key) {
-  try {
-    return JSON.parse(localStorage.getItem(key));
-  } catch (e) {
-    console.warn('readJSON parse error for', key, e);
-    return null;
-  }
-}
-function writeJSON(key, value) {
-  localStorage.setItem(key, JSON.stringify(value));
-}
-
-// ---------------------- Default Products (declared first) ----------------------
+// ---- Defaults ----
 const DEFAULT_PRODUCTS = [
   {
     name: "iPhone 15",
@@ -29,7 +17,7 @@ const DEFAULT_PRODUCTS = [
     name: "Wireless Earbuds",
     price: 25000,
     image: "assets/images/earbuds.jpg",
-    desc: "True wireless earbuds — Bluetooth 5.3, ANC, up to 30 hours with case, touch controls."
+    desc: "Wireless Earbuds — True wireless, Bluetooth 5.3, ANC, up to 30 hours with case."
   },
   {
     name: "Powerbank 50000mAh",
@@ -39,198 +27,186 @@ const DEFAULT_PRODUCTS = [
   }
 ];
 
-// ---------------------- Cart functions ----------------------
-let cart = readJSON(STORAGE_KEYS.CART) || [];
+// ---- Helpers ----
+function readJSON(key){ try { return JSON.parse(localStorage.getItem(key)); } catch(e){ return null; } }
+function writeJSON(key,val){ localStorage.setItem(key, JSON.stringify(val)); }
+function fmt(n){ return Number(n).toLocaleString(); }
 
-function saveCart() {
-  writeJSON(STORAGE_KEYS.CART, cart);
-}
-
-function addToCart(product) {
-  if (!product || !product.name) return;
-  const existing = cart.find(it => it.name === product.name);
-  if (existing) {
-    existing.quantity = (existing.quantity || 0) + 1;
-  } else {
-    const toAdd = Object.assign({}, product);
-    toAdd.quantity = toAdd.quantity || 1;
-    cart.push(toAdd);
-  }
-  saveCart();
-  try { alert(`${product.name} added to cart`); } catch(e) {}
-}
-
-// ---------------------- Products storage/load ----------------------
-function loadStoredProducts() {
+// ---- Products (can be extended via admin) ----
+function loadProducts(){
   const stored = readJSON(STORAGE_KEYS.PRODUCTS);
-  if (Array.isArray(stored) && stored.length) return stored;
-  return DEFAULT_PRODUCTS.slice();
+  return (Array.isArray(stored) && stored.length) ? stored : DEFAULT_PRODUCTS.slice();
+}
+function saveProducts(list){ writeJSON(STORAGE_KEYS.PRODUCTS, list); }
+
+// ---- Cart management ----
+let cart = readJSON(STORAGE_KEYS.CART) || [];
+function saveCart(){ writeJSON(STORAGE_KEYS.CART, cart); }
+function updateCartCount(){
+  const el = document.getElementById('cart-count');
+  if (!el) return;
+  const count = cart.reduce((s,i)=> s + (i.quantity||0), 0);
+  el.textContent = count;
+}
+function addToCart(product){
+  if (!product || !product.name) return;
+  const ex = cart.find(i => i.name === product.name);
+  if (ex) ex.quantity = (ex.quantity||0) + 1;
+  else cart.push(Object.assign({}, product, { quantity: 1 }));
+  saveCart();
+  updateCartCount();
+  showSelectedPreview(product);
 }
 
-function saveStoredProducts(list) {
-  writeJSON(STORAGE_KEYS.PRODUCTS, list);
+// ---- Selected preview ----
+function showSelectedPreview(p){
+  const sel = document.getElementById('selected-item');
+  if (!sel) return;
+  sel.style.display = 'block';
+  sel.innerHTML = `
+    <div style="display:flex;align-items:center;gap:12px;">
+      <img src="${p.image}" alt="${p.name}" style="width:90px;height:90px;object-fit:contain;border-radius:8px;" onerror="this.style.opacity=0.6" />
+      <div>
+        <strong>${escapeHtml(p.name)}</strong>
+        <div>₦${fmt(p.price)}</div>
+        <div style="margin-top:8px;"><button class="btn" onclick="window.location.href='cart.html'">Review Cart</button></div>
+      </div>
+    </div>
+  `;
+  // auto-hide after 5s
+  clearTimeout(window._selTimeout);
+  window._selTimeout = setTimeout(()=>{ sel.style.display='none'; }, 5000);
 }
 
-// ---------------------- XSS-safe helpers ----------------------
-function escapeHtml(s) {
-  if (s == null) return '';
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-function escapeAttr(s) {
-  if (s == null) return '';
-  return String(s).replace(/"/g, '&quot;');
-}
+// ---- Safe escaping ----
+function escapeHtml(s){ if (s == null) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-// ---------------------- Render product grid ----------------------
-function renderProductsGrid() {
+// ---- Rendering products grid ----
+let CURRENT_PRODUCTS = loadProducts(); // in-memory list
+function renderProducts(list){
   const grid = document.getElementById('products-grid');
   if (!grid) return;
-  const products = loadStoredProducts();
   grid.innerHTML = '';
-  products.forEach(p => {
+  list.forEach(p => {
     const card = document.createElement('div');
     card.className = 'product-card';
     card.innerHTML = `
-      <img src="${p.image}" alt="${escapeAttr(p.name)}" onerror="this.style.opacity=0.6; this.nextElementSibling && (this.nextElementSibling.textContent='Image not found')" />
+      <img src="${p.image}" alt="${escapeHtml(p.name)}" />
       <h3>${escapeHtml(p.name)}</h3>
-      <p class="desc">${escapeHtml(p.desc || '')}</p>
-      <p class="price">₦${Number(p.price).toLocaleString()}</p>
-      <button class="add-to-cart" data-name="${escapeAttr(p.name)}" data-price="${Number(p.price)}" data-image="${escapeAttr(p.image)}">Add to Cart</button>
+      <p class="desc">${escapeHtml(p.desc||'')}</p>
+      <div class="meta">
+        <p class="price">₦${fmt(p.price)}</p>
+        <div>
+          <button class="add-to-cart" data-name="${escapeHtml(p.name)}" data-price="${p.price}" data-image="${escapeHtml(p.image)}" data-desc="${escapeHtml(p.desc||'')}">Add to Cart</button>
+        </div>
+      </div>
     `;
     grid.appendChild(card);
   });
+  updateCartCount();
 }
 
-// ---------------------- URL product handling ----------------------
-function handleUrlProduct() {
-  try {
-    const params = new URLSearchParams(window.location.search);
-    if (!params.has('name')) return;
-
-    const name = params.get('name');
-    const price = parseFloat(params.get('price')) || 0;
-    const image = params.get('image') || '';
-    const desc = params.get('desc') || '';
-
-    addToCart({ name, price, image, desc });
-
-    const selectedSection = document.getElementById('selected-item-section');
-    const selectedDiv = document.getElementById('selected-item');
-    if (selectedSection && selectedDiv) {
-      selectedSection.style.display = 'block';
-      selectedDiv.innerHTML = `
-        <div style="display:flex;gap:14px;align-items:center;">
-          <img src="${escapeAttr(image)}" alt="${escapeAttr(name)}" style="width:110px;height:110px;object-fit:contain;border-radius:8px" onerror="this.style.opacity=0.6" />
-          <div>
-            <h3 style="margin:0">${escapeHtml(name)}</h3>
-            <p style="margin:6px 0">₦${Number(price).toLocaleString()}</p>
-            <p style="margin:0">${escapeHtml(desc || 'Added to cart')}</p>
-            <p style="margin-top:8px"><a href="cart.html" class="btn">Go to Cart</a></p>
-          </div>
-        </div>
-      `;
-    }
-
-    history.replaceState({}, document.title, window.location.pathname);
-  } catch (e) {
-    console.error('handleUrlProduct error', e);
+// ---- Filtering (search) ----
+function filterProducts(q){
+  q = (q || '').trim().toLowerCase();
+  if (!q) {
+    CURRENT_PRODUCTS = loadProducts();
+    renderProducts(CURRENT_PRODUCTS);
+    return;
   }
+  const all = loadProducts();
+  const filtered = all.filter(p => {
+    return (p.name || '').toLowerCase().includes(q) || (p.desc || '').toLowerCase().includes(q);
+  });
+  CURRENT_PRODUCTS = filtered;
+  renderProducts(filtered);
 }
 
-// ---------------------- Event delegation for Add to Cart ----------------------
-document.addEventListener('click', function (ev) {
-  const btn = ev.target.closest && ev.target.closest('.add-to-cart');
+// ---- Click delegation for add-to-cart (works on homepage) ----
+document.addEventListener('click', function(e){
+  const btn = e.target.closest && e.target.closest('.add-to-cart');
   if (!btn) return;
   const name = btn.getAttribute('data-name');
   const price = parseFloat(btn.getAttribute('data-price')) || 0;
   const image = btn.getAttribute('data-image') || '';
-  addToCart({ name, price, image });
+  const desc = btn.getAttribute('data-desc') || '';
+  // Add and show preview — stays on homepage
+  addToCart({ name, price, image, desc });
 });
 
-// ---------------------- Cart page rendering ----------------------
-function renderCart() {
+// ---- Cart page rendering (cart.html) ----
+function renderCart(){
   const container = document.getElementById('cart-items');
   const summary = document.getElementById('cart-summary');
   if (!container) return;
-
   container.innerHTML = '';
-  summary && (summary.innerHTML = '');
-
-  if (!cart.length) {
-    container.innerHTML = '<p>Your cart is empty.</p>';
-    return;
-  }
-
+  (summary) && (summary.innerHTML = '');
+  if (!cart.length) { container.innerHTML = '<p>Your cart is empty.</p>'; return; }
   let total = 0;
-  cart.forEach((item, idx) => {
-    const itemTotal = (item.price || 0) * (item.quantity || 1);
+  cart.forEach((it, idx) => {
+    const itemTotal = (it.price||0) * (it.quantity||1);
     total += itemTotal;
     const div = document.createElement('div');
     div.className = 'cart-item';
     div.innerHTML = `
-      <img src="${escapeAttr(item.image)}" alt="${escapeAttr(item.name)}" />
+      <img src="${it.image}" alt="${escapeHtml(it.name)}" />
       <div class="cart-item-details">
-        <h3>${escapeHtml(item.name)}</h3>
-        <p>Price: ₦${Number(item.price).toLocaleString()}</p>
-        <p>Quantity: ${Number(item.quantity)}</p>
-        <p>Total: ₦${Number(itemTotal).toLocaleString()}</p>
+        <h3>${escapeHtml(it.name)}</h3>
+        <p>Price: ₦${fmt(it.price)}</p>
+        <p>Quantity: ${it.quantity}</p>
+        <p>Total: ₦${fmt(itemTotal)}</p>
       </div>
       <button class="remove-btn" data-index="${idx}">Remove</button>
     `;
     container.appendChild(div);
   });
-
-  summary && (summary.innerHTML = `<p>Total Cart Value: ₦${Number(total).toLocaleString()}</p>`);
+  (summary) && (summary.innerHTML = `<p>Total Cart Value: ₦${fmt(total)}</p>`);
 }
 
-// remove item handler
-document.addEventListener('click', function (ev) {
-  const btn = ev.target.closest && ev.target.closest('.remove-btn');
+// remove item handler for cart page
+document.addEventListener('click', function(e){
+  const btn = e.target.closest && e.target.closest('.remove-btn');
   if (!btn) return;
   const idx = parseInt(btn.getAttribute('data-index'), 10);
   if (!Number.isFinite(idx)) return;
-  cart.splice(idx, 1);
+  cart.splice(idx,1);
   saveCart();
   renderCart();
+  updateCartCount();
 });
 
-// ---------------------- Clear cart & Checkout (if present on page) ----------------------
-function setupClearAndCheckout() {
+// clear and checkout handlers
+function setupCartButtons(){
   const clearBtn = document.getElementById('clear-cart');
-  if (clearBtn) {
-    clearBtn.addEventListener('click', () => {
-      if (!confirm('Clear cart?')) return;
-      cart = [];
-      localStorage.removeItem(STORAGE_KEYS.CART);
-      renderCart();
-    });
-  }
-
+  if (clearBtn) clearBtn.addEventListener('click', () => {
+    if (!confirm('Clear cart?')) return;
+    cart = []; saveCart(); renderCart(); updateCartCount();
+  });
   const checkoutBtn = document.getElementById('checkout-btn');
-  if (checkoutBtn) {
-    checkoutBtn.addEventListener('click', () => {
-      if (!cart.length) { alert('Cart empty'); return; }
-      const total = cart.reduce((s, it) => s + (Number(it.price || 0) * Number(it.quantity || 1)), 0);
-      if (!confirm(`Proceed to checkout? Total: ₦${total.toLocaleString()}`)) return;
-      writeJSON(STORAGE_KEYS.CHECKOUT, { items: cart, total });
-      window.location.href = 'checkout.html';
-    });
-  }
+  if (checkoutBtn) checkoutBtn.addEventListener('click', () => {
+    if (!cart.length) { alert('Cart empty'); return; }
+    const total = cart.reduce((s,i)=> s + (i.price||0)*(i.quantity||1), 0);
+    if (!confirm(`Proceed to checkout? Total: ₦${fmt(total)}`)) return;
+    writeJSON(STORAGE_KEYS.CHECKOUT, { items: cart, total });
+    window.location.href = 'checkout.html';
+  });
 }
 
-// ---------------------- Startup ----------------------
+// ---- Init on DOM ready ----
 document.addEventListener('DOMContentLoaded', () => {
+  // init products and render
+  CURRENT_PRODUCTS = loadProducts();
+  renderProducts(CURRENT_PRODUCTS);
+
+  // wire cart from storage
   cart = readJSON(STORAGE_KEYS.CART) || [];
-  try {
-    renderProductsGrid();
-    handleUrlProduct();
-  } catch (e) {
-    console.error('Error rendering products or handling URL:', e);
-  }
-  try {
-    renderCart();
-    setupClearAndCheckout();
-  } catch (e) {
-    console.error('Error rendering cart or setup buttons:', e);
-  }
+  updateCartCount();
+
+  // if on cart page, render cart & setup buttons
+  renderCart();
+  setupCartButtons();
 });
+
+// ---- Expose filter function globally for index inline script to call ----
+window.filterProducts = filterProducts;
+window.updateCartCount = updateCartCount;
