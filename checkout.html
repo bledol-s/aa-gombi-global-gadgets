@@ -1,29 +1,222 @@
-<!doctype html>
-<html>
-<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Checkout</title>
-<link rel="stylesheet" href="assets/css/style.css" />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Checkout - AA GOMBI GLOBAL GADGETS</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <style>
+    /* small form & order-summary tweaks */
+    .checkout-grid { display:grid; grid-template-columns: 1fr 360px; gap:22px; margin-top:18px; }
+    @media (max-width:900px) { .checkout-grid { grid-template-columns: 1fr; } }
+    .order-summary { background:#fff; padding:14px; border-radius:10px; border:1px solid #eee; }
+    .order-summary h3 { margin:0 0 10px 0; color:#6A0DAD; }
+    .checkout-form { background:#fff; padding:14px; border-radius:10px; border:1px solid #eee; }
+    .form-row { margin-bottom:10px; display:flex; flex-direction:column; gap:6px; }
+    .form-row label { font-weight:700; font-size:13px; color:#333; }
+    .form-row input, .form-row textarea { padding:10px; border-radius:8px; border:1px solid #e6e6e6; font-size:14px; }
+    .confirm-actions { margin-top:12px; display:flex; gap:10px; }
+    .small-note { font-size:13px; color:#666; margin-top:8px; }
+  </style>
 </head>
 <body>
-  <div class="container" style="padding:30px;">
-    <h2>Checkout (Demo)</h2>
-    <div id="checkout-info"></div>
-    <p>This is a demo checkout page. Payment gateway will be integrated later.</p>
-    <button id="confirm-order" class="btn">Confirm Order (Demo)</button>
-  </div>
-<script>
-  const payload = JSON.parse(localStorage.getItem('checkout_payload') || 'null');
-  const el = document.getElementById('checkout-info');
-  if (!payload) {
-    el.innerHTML = '<p>No checkout data found.</p>';
-  } else {
-    el.innerHTML = `<p>Items: ${payload.items.length}</p><p>Total: ₦${payload.total.toLocaleString()}</p>`;
-  }
-  document.getElementById('confirm-order').addEventListener('click', () => {
-    alert('Order confirmed (demo). Clear cart now.');
-    localStorage.removeItem('cart');
-    localStorage.removeItem('checkout_payload');
-    window.location.href = 'index.html';
-  });
-</script>
+  <!-- Header (same structure used across site) -->
+  <header class="site-header">
+    <div class="container header-row">
+      <div class="brand">
+        <img src="assets/images/logo.png" alt="AA Gombi logo" class="brand-logo" />
+        <div>
+          <h1 class="brand-title">AA GOMBI GLOBAL GADGETS</h1>
+          <p class="brand-sub">Gadgets & Accessories — quality you can trust</p>
+        </div>
+      </div>
+
+      <nav class="site-nav">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="cart.html" class="nav-link">Cart <span id="cart-count" class="cart-count">0</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding:24px 0;">
+    <h2 class="section-title">Checkout</h2>
+
+    <div class="checkout-grid">
+      <!-- Left: Contact form & notes -->
+      <div class="checkout-form">
+        <h3>Contact & Delivery</h3>
+
+        <div class="form-row">
+          <label for="cust-name">Full name</label>
+          <input id="cust-name" type="text" placeholder="John Doe" />
+        </div>
+
+        <div class="form-row">
+          <label for="cust-phone">Phone (required)</label>
+          <input id="cust-phone" type="tel" placeholder="+234 812 345 6789" />
+        </div>
+
+        <div class="form-row">
+          <label for="cust-address">Delivery address</label>
+          <textarea id="cust-address" rows="3" placeholder="Street, City, State"></textarea>
+        </div>
+
+        <div class="form-row">
+          <label for="cust-note">Order note (optional)</label>
+          <textarea id="cust-note" rows="2" placeholder="Leave a note, e.g. preferred delivery time"></textarea>
+        </div>
+
+        <div class="small-note">
+          We will contact you on WhatsApp or phone to confirm delivery details. This demo does not process payments yet.
+        </div>
+
+        <div class="confirm-actions">
+          <button id="back-to-cart" class="btn btn-secondary">Back to Cart</button>
+          <button id="confirm-order" class="btn btn-primary">Confirm Order (Demo)</button>
+        </div>
+      </div>
+
+      <!-- Right: Order summary -->
+      <aside class="order-summary" aria-live="polite">
+        <h3>Order Summary</h3>
+        <div id="order-items"></div>
+        <div id="order-total" style="margin-top:12px; font-weight:800;"></div>
+        <div style="margin-top:12px;">
+          <a href="https://wa.me/2348137342695" target="_blank" rel="noopener" class="btn btn-secondary">Chat on WhatsApp</a>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- Footer (same as index footer) -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-block">
+        <h4>About AA Gombi</h4>
+        <p class="muted">We sell gadgets and accessories across Nigeria — quality items, fair prices, and prompt delivery.</p>
+      </div>
+
+      <div class="footer-block">
+        <h4>Admin</h4>
+        <p><a class="footer-link" href="admin.html">Product Management (Admin)</a></p>
+      </div>
+
+      <div class="footer-block">
+        <h4>Weekend Deals</h4>
+        <p><a class="footer-link" href="https://whatapp.com/channel/0029VbAlwXxLY6d8DGv81H3R" target="_blank" rel="noopener">WhatsApp channel</a></p>
+      </div>
+
+      <div class="footer-block">
+        <h4>Follow Us</h4>
+        <div class="social-row">
+          <a class="social-link" href="#"><img src="assets/images/instagram.png" class="social-icon" alt="Instagram"> Instagram</a>
+          <a class="social-link" href="#"><img src="assets/images/facebook.png" class="social-icon" alt="Facebook"> Facebook</a>
+          <a class="social-link" href="#"><img src="assets/images/tiktok.png" class="social-icon" alt="TikTok"> TikTok</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="container footer-bottom">
+      <p class="muted">&copy; 2025 AA GOMBI GLOBAL GADGETS</p>
+    </div>
+  </footer>
+
+  <!-- WhatsApp floating chat button -->
+  <a href="https://wa.me/2348137342695" target="_blank" rel="noopener" class="whatsapp-float" aria-label="Chat on WhatsApp">
+    <img src="assets/images/whatsapp-icon.png" alt="WhatsApp" />
+  </a>
+
+  <!-- Toast container -->
+  <div id="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="assets/js/script.js"></script>
+  <script>
+    // Checkout page behaviour (uses helper functions from script.js)
+    document.addEventListener('DOMContentLoaded', () => {
+      const payload = JSON.parse(localStorage.getItem('checkout_payload') || 'null');
+      const itemsEl = document.getElementById('order-items');
+      const totalEl = document.getElementById('order-total');
+      const confirmBtn = document.getElementById('confirm-order');
+      const backBtn = document.getElementById('back-to-cart');
+
+      if (!payload || !payload.items || !payload.items.length) {
+        itemsEl.innerHTML = '<p>No checkout data found. Please add items to the cart first.</p>';
+        totalEl.innerHTML = '';
+        confirmBtn.disabled = true;
+        return;
+      }
+
+      // Render items
+      itemsEl.innerHTML = '';
+      payload.items.forEach(it => {
+        const div = document.createElement('div');
+        div.style = 'display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px dashed #eee;';
+        div.innerHTML = `
+          <img src="${it.image}" alt="${it.name}" style="width:72px;height:56px;object-fit:contain;border-radius:6px;" />
+          <div style="flex:1;">
+            <strong>${it.name}</strong>
+            <div style="font-size:13px;color:#444;">₦${Number(it.price).toLocaleString()} × ${it.quantity || 1}</div>
+          </div>
+          <div style="font-weight:800;">₦${Number((it.price || 0) * (it.quantity || 1)).toLocaleString()}</div>
+        `;
+        itemsEl.appendChild(div);
+      });
+
+      totalEl.innerHTML = `Total: ₦${Number(payload.total).toLocaleString()}`;
+
+      // Back to cart
+      backBtn.addEventListener('click', () => {
+        window.location.href = 'cart.html';
+      });
+
+      // Confirm order (demo)
+      confirmBtn.addEventListener('click', () => {
+        // basic validation: phone required
+        const phone = document.getElementById('cust-phone').value.trim();
+        if (!phone) {
+          // use toast if available
+          if (typeof showToast === 'function') showToast('Please enter a phone number');
+          else alert('Please enter a phone number');
+          return;
+        }
+
+        const name = document.getElementById('cust-name').value.trim();
+        const address = document.getElementById('cust-address').value.trim();
+        const note = document.getElementById('cust-note').value.trim();
+
+        // Build a simple order object
+        const order = {
+          id: 'ORD-' + Date.now(),
+          created: new Date().toISOString(),
+          customer: { name, phone, address, note },
+          items: payload.items,
+          total: payload.total,
+          status: 'pending' // demo status
+        };
+
+        // Save to local orders list (demo only)
+        try {
+          const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+          orders.push(order);
+          localStorage.setItem('orders', JSON.stringify(orders));
+        } catch (e) {
+          console.error('Saving order failed', e);
+        }
+
+        // Clear cart and checkout payload
+        localStorage.removeItem('cart');
+        localStorage.removeItem('checkout_payload');
+
+        // update header count UI if function exists
+        if (typeof updateCartCount === 'function') updateCartCount();
+
+        // Show toast and redirect home
+        if (typeof showToast === 'function') showToast('Order confirmed — we will contact you soon', 4000);
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 1600);
+      });
+    });
+  </script>
 </body>
 </html>
