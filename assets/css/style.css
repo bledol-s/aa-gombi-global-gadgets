@@ -53,6 +53,43 @@
 /* footer bottom */
 .footer-bottom { margin-top:12px; text-align:center; color:#ccc; }
 
+/* ---------- Confirmation modal styles ---------- */
+.confirm-modal { position: fixed; inset: 0; display: none; z-index: 12000; align-items:center; justify-content:center; }
+.confirm-modal[aria-hidden="false"] { display:flex; }
+.confirm-modal-backdrop { position:absolute; inset:0; background:rgba(0,0,0,0.45); }
+.confirm-modal-panel {
+  position:relative;
+  background:#fff;
+  padding:18px;
+  width: 92%;
+  max-width:420px;
+  border-radius:10px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+  z-index: 1;
+}
+.confirm-modal-panel h3 { margin:0 0 8px 0; color:#6A0DAD; }
+.confirm-modal-panel p { margin:0 0 14px 0; color:#333; }
+.confirm-actions { display:flex; justify-content:flex-end; gap:10px; }
+
+/* ---------- Quantity controls ---------- */
+.qty-control { display:flex; align-items:center; gap:8px; }
+.qty-btn {
+  width:32px; height:32px; border-radius:8px; border:none; font-weight:700; cursor:pointer;
+  display:inline-flex; align-items:center; justify-content:center;
+  background:#6A0DAD; color:#FFD700;
+}
+.qty-btn:active { transform:translateY(1px); }
+.qty-input {
+  width:56px; padding:8px; border-radius:8px; border:1px solid #e6e6e6; text-align:center; font-weight:700;
+}
+
+/* Make remove button align under qty on narrow screens */
+.cart-item .controls { display:flex; flex-direction:column; gap:8px; }
+@media(min-width:720px) {
+  .cart-item .controls { flex-direction:column; align-items:flex-end; }
+}
+
+
 /* ---------------- WhatsApp floating button ---------------- */
 .whatsapp-float {
   position:fixed;
@@ -94,3 +131,53 @@
   transition: opacity 220ms ease, transform 220ms ease;
 }
 .toast.show { opacity: 1; transform: translateY(0); }
+
+/* Header tweaks (slightly larger logo, spacing) */
+.brand-logo { height:72px; }
+.brand-title { font-size:22px; }
+.brand-sub { font-size:12px; color:#666; }
+
+/* Buttons (primary and secondary) */
+.btn {
+  display:inline-block;
+  padding:10px 14px;
+  border-radius:8px;
+  font-weight:700;
+  text-decoration:none;
+  border: none;
+  cursor: pointer;
+}
+.btn-primary {
+  background:#FFD700;
+  color:#6A0DAD;
+}
+.btn-primary:hover { background:#E6BE00; }
+
+.btn-secondary {
+  background: #6A0DAD;
+  color:#FFD700;
+}
+.btn-secondary:hover { background:#5a0ca0; }
+
+/* Cart item styling */
+.cart-item {
+  display:flex;
+  gap:14px;
+  align-items:center;
+  padding:12px;
+  border-radius:8px;
+  border:1px solid #eee;
+  margin-bottom:12px;
+  background:#fff;
+}
+.cart-item img { width:110px; height:80px; object-fit:contain; border-radius:6px; }
+.cart-item-details h3 { margin:0 0 6px 0; color:#6A0DAD; }
+.cart-item-details p { margin:4px 0; color:#333; }
+.remove-btn {
+  background:#c0392b;
+  color:#fff;
+  border:none;
+  padding:8px 10px;
+  border-radius:8px;
+  cursor:pointer;
+}
