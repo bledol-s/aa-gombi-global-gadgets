@@ -29,7 +29,16 @@ const Navbar = () => {
               <NavLink className="nav-link text-gold" to="/refurbish">Refurbish</NavLink>
             </li>
             <li className="nav-item">
-              <a className="nav-link text-gold" href="/#about-us-section">About us</a>
+              <NavLink className="nav-link text-gold" to="/login">Login</NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink className="nav-link text-gold" to="/signup">Sign Up</NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink className="nav-link text-gold" to="/cart">
+                <i className="fas fa-shopping-cart me-1"></i>
+                Cart
+              </NavLink>
             </li>
             <li className="nav-item ms-lg-2 mt-2 mt-lg-0">
               <button className="btn btn-warning" onClick={toggleContactForm}>Get in touch</button>

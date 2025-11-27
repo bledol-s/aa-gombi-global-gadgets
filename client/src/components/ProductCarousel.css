@@ -2,22 +2,6 @@
 .product-carousel-container {
   overflow-x: auto;
   padding-bottom: 15px;
-  scrollbar-width: thin; 
-  scrollbar-color: #ffc107 #f8f9fa; 
-}
-
-.product-carousel-container::-webkit-scrollbar {
-  height: 8px;
-}
-
-.product-carousel-container::-webkit-scrollbar-track {
-  background: #f8f9fa;
-}
-
-.product-carousel-container::-webkit-scrollbar-thumb {
-  background-color: #ffc107;
-  border-radius: 10px;
-  border: 3px solid #f8f9fa;
 }
 
 .product-row {
@@ -26,21 +10,19 @@
 }
 
 .product-card-portrait {
-  width: 220px; 
-  flex-shrink: 0;
+  flex: 0 0 auto;
+  width: 250px;
   margin-right: 15px;
-  height: 100%;
 }
 
-.product-card-portrait .card-img-top {
-  width: 100%;
-  height: 280px; 
-  object-fit: contain;
-  padding: 10px;
+.btn-purple {
+  background-color: purple;
+  color: white;
 }
 
-.product-card-portrait .card-body {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+.floating-cart-button {
+  position: fixed;
+  bottom: 20px;
+  right: 100px; /* Adjust as needed */
+  z-index: 1000;
 }
