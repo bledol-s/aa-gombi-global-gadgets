@@ -1,0 +1,24 @@
+
+body {
+  padding-top: 120px; 
+}
+
+.bg-purple {
+  background-color: #4A0072 !important;
+}
+
+.text-gold {
+  color: #FFD700 !important;
+}
+
+.brand-title, .brand-sub {
+    color: #FFD700;
+}
+
+.nav-link {
+    color: white !important;
+}
+
+.navbar-toggler {
+    background-color: #FFD700;
+}
