@@ -3,25 +3,34 @@ import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { Fade } from 'react-awesome-reveal';
 import { CartContext } from '../context/CartContext';
-import './ProductCarousel.css';
 
 const ProductCarousel = ({ products, category }) => {
   const { cart, addToCart } = useContext(CartContext);
-  const categoryProducts = products.filter(p => p.category === category);
+
+  // If the category is a special case like "Recommended for You", use the products prop directly.
+  // Otherwise, filter by the category name.
+  const productsToShow = category === "Recommended for You" 
+    ? products 
+    : products.filter(p => p.category === category);
 
   const isProductInCart = (productId) => {
     return cart.some(item => item.id === productId);
   };
+
+  // If there are no products to show, don't render the component
+  if (!productsToShow || productsToShow.length === 0) {
+    return null;
+  }
 
   return (
     <div className="my-5">
       <h2 className="mb-4">{category}</h2>
       <div className="product-carousel-container">
         <div className="product-row">
-          {categoryProducts.map((product, index) => (
+          {productsToShow.map((product, index) => (
             <Fade key={product.id} direction="up" delay={index * 100} triggerOnce>
               <div className="product-card-portrait">
-                <div className="card h-100">
+                <div className="card h-100 shadow-sm a-gombi-card-border">
                   <Link to={`/products/${product.id}`}>
                     <img src={product.image} className="card-img-top" alt={product.name} />
                   </Link>

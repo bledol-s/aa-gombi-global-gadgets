@@ -22,3 +22,122 @@ body {
 .navbar-toggler {
     background-color: #FFD700;
 }
+
+/* Styles from ProductCarousel.css */
+.product-carousel-container {
+  overflow-x: auto;
+  padding-bottom: 15px;
+  scrollbar-width: thin; /* For Firefox */
+  scrollbar-color: #ffc107 #f8f9fa; /* For Firefox */
+}
+
+.product-carousel-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.product-carousel-container::-webkit-scrollbar-track {
+  background: #f8f9fa;
+}
+
+.product-carousel-container::-webkit-scrollbar-thumb {
+  background-color: #ffc107;
+  border-radius: 10px;
+  border: 2px solid #f8f9fa;
+}
+
+.product-row {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.product-card-portrait {
+  flex: 0 0 auto;
+  width: 280px;
+  margin-right: 20px;
+}
+
+.product-card-portrait .card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.product-card-portrait .card-img-top {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.product-card-portrait .card-body {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.product-card-portrait .card-title {
+  min-height: 48px;
+}
+
+.product-card-portrait .btn {
+  margin-top: auto;
+}
+
+/* Using the unified purple color */
+.btn-purple {
+  background-color: #4A0072;
+  color: white;
+  border: none;
+}
+
+.btn-purple:hover {
+  background-color: #380053; /* Darker shade for hover */
+}
+
+.floating-cart-button {
+  position: fixed;
+  bottom: 30px;
+  right: 100px;
+  z-index: 1000;
+  background-color: #ffc107;
+  border: none;
+  padding: 15px 25px;
+  border-radius: 50px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Styles from Footer.css */
+
+/* Set the default text color for the footer to white and unified purple */
+.a-gombi-footer {
+  background-color: #4A0072; /* Unified with navbar purple */
+  color: #f8f9fa; /* A nice, readable off-white */
+}
+
+.a-gombi-footer .footer-title {
+  color: #ffc107;
+}
+
+.a-gombi-footer .quick-link {
+  color: #f8f9fa;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.a-gombi-footer .quick-link:hover {
+  color: #ffc107;
+}
+
+.a-gombi-footer .social-icon {
+  color: #ffc107;
+  transition: color 0.3s ease;
+}
+
+.a-gombi-footer .social-icon:hover {
+  color: #fff;
+}
+
+.a-gombi-footer .copyright-bar {
+  background-color: #000000;
+  padding: 1rem 0;
+  margin-top: 1.5rem;
+}

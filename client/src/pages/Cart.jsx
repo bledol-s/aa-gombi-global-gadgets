@@ -8,9 +8,20 @@ import { allProducts as products } from '../data/products.js';
 const Cart = () => {
   const { cart, removeFromCart, updateQuantity } = useContext(CartContext);
 
-  const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  // Helper function to parse the price string (e.g., "999,000") into a number
+  const parsePrice = (price) => {
+    if (typeof price === 'string') {
+      return parseFloat(price.replace(/,/g, ''));
+    }
+    return price; // Return as is if it's already a number
+  };
 
-  const recommendedProducts = products.filter(p => !cart.some(item => item.id === p.id)).slice(0, 4);
+  const total = cart.reduce((acc, item) => {
+    const price = parsePrice(item.price);
+    return acc + price * item.quantity;
+  }, 0);
+
+  const recommendedProducts = products.filter(p => !cart.some(item => item.id === p.id)).slice(0, 6);
 
   return (
     <div className="container my-5">
@@ -23,16 +34,16 @@ const Cart = () => {
       ) : (
         <div>
           {cart.map(item => (
-            <div key={item.id} className="card mb-3">
+            <div key={item.id} className="card mb-3 shadow-sm">
               <div className="row g-0">
-                <div className="col-md-2">
-                  <img src={item.image} className="img-fluid rounded-start" alt={item.name} />
+                <div className="col-md-2 d-flex align-items-center justify-content-center">
+                  <img src={item.image} className="img-fluid rounded-start p-2" alt={item.name} style={{ maxHeight: '150px' }} />
                 </div>
                 <div className="col-md-8">
                   <div className="card-body">
                     <h5 className="card-title">{item.name}</h5>
-                    <p className="card-text">Price: ₦{item.price}</p>
-                    <div className="d-flex align-items-center">
+                    <p className="card-text text-muted">Price: ₦{item.price}</p>
+                    <div className="d-flex align-items-center mt-3">
                       <label htmlFor={`quantity-${item.id}`} className="me-2">Quantity:</label>
                       <input
                         type="number"
@@ -43,7 +54,7 @@ const Cart = () => {
                         onChange={(e) => updateQuantity(item.id, parseInt(e.target.value))}
                         style={{ width: '80px' }}
                       />
-                      <button onClick={() => removeFromCart(item.id)} className="btn btn-danger ms-3">Remove</button>
+                      <button onClick={() => removeFromCart(item.id)} className="btn btn-outline-danger ms-3">Remove</button>
                     </div>
                   </div>
                 </div>
@@ -51,13 +62,14 @@ const Cart = () => {
             </div>
           ))}
           <div className="d-flex justify-content-end align-items-center mt-4">
-            <h4>Total: ₦{total.toFixed(2)}</h4>
-            <Link to="/checkout" className="btn btn-warning ms-3">Proceed to Checkout</Link>
+            <h4 className="me-3">Total: <span className="text-warning">₦{total.toLocaleString()}</span></h4>
+            <Link to="/checkout" className="btn btn-warning btn-lg">Proceed to Checkout</Link>
           </div>
         </div>
       )}
-      <div className="mt-5">
-        <h3>Would you like to add more products?</h3>
+      <div className="mt-5 pt-4 border-top">
+        <h3>You might also like...</h3>
+        {/* The ProductCarousel now receives the filtered list directly */}
         <ProductCarousel products={recommendedProducts} category="Recommended for You" />
       </div>
     </div>
